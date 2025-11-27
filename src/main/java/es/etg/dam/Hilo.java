@@ -2,25 +2,24 @@ package es.etg.dam;
 
 import java.util.concurrent.Exchanger;
 
-class HiloIntercambio implements Runnable {
+class Hilo implements Runnable {
 
     private Exchanger<String> exchanger;
-    private String mensaje;
+    private String mensajeEnviado;
+    private String mensajeRecibido;
+    private static final String RECIBIR = "Ha recibido: ";
 
-    public HiloIntercambio(Exchanger<String> exchanger, String mensaje) {
+    public Hilo(Exchanger<String> exchanger, String mensaje) {
         this.exchanger = exchanger;
-        this.mensaje = mensaje;
+        this.mensajeEnviado = mensaje;
+
     }
 
     @Override
     public void run() {
         try {
-            System.out.println(Thread.currentThread().getName() + " envía: " + mensaje);
-
-            String recibido = exchanger.exchange(mensaje);
-
-            System.out.println(Thread.currentThread().getName()
-                    + " recibe: " + recibido);
+            mensajeRecibido = exchanger.exchange(mensajeEnviado);
+            System.out.println(RECIBIR + mensajeRecibido);
 
         } catch (InterruptedException e) {
             System.err.println(e.getMessage());
